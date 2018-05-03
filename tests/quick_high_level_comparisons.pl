@@ -3,6 +3,7 @@ use lib 'c:\\UDWTesting';
 
 use strict;
 use warnings;
+use Test::Simple tests =>104;
 
 #bring some required tools in
 use inc::tools::mod_dbtools qw( DBNAME READSQL);
@@ -69,6 +70,19 @@ sub totalPremiums{
 	#    First fast compare check - measures GWP and GBP between specified source and target #
 	#----------------------------------------------------------------------------------------#
 	
+	#setup variables to hold the test status for TAP.
+	my $PublicLiability=1;
+	my $CommercialProperty=1;
+	my $PersonalLinesProperty=1;
+	my $ProfessionalIndemnity=1;
+	my $PersonalAccident=1;
+	my $PropertyOwnersLiability=1;
+	my $EmployersLiability=1;
+	my $Terrorism=1;
+		
+	
+	
+	
 	$testDBHandle = inc::tools::mod_database::TESTDB();
 	$sourceSQL = inc::tools::mod_dbtools::READSQL('c:\\udwtesting\\SQL\\fastchecks\\cms_premiums_high_level_comparison.sql') || die "Source SQL file read error\n";
 	$targetSQL = inc::tools::mod_dbtools::READSQL('c:\\udwtesting\\SQL\\fastchecks\\dwh_premiums_high_level_comparison.sql') || die "Target SQL file read error\n";
@@ -94,7 +108,7 @@ sub totalPremiums{
 		$totalPremium = $row[0];
 		
 		# call the PRA CLASS RULES
-		$praclass = inc::mod_transform_rules::PRACLASS($row[1]);
+		$praclass = inc::tools::mod_transform_rules::PRACLASS($row[1]);
 		
 		$monthyear = $row[2];
 		$premiumType = $row[3];	
@@ -110,7 +124,7 @@ sub totalPremiums{
 		$totalPremium = $row[0];
 	
 		# call the PRA CLASS RULES
-		$praclass = inc::mod_transform_rules::PRACLASS($row[1]);
+		$praclass = inc::tools::mod_transform_rules::PRACLASS($row[1]);
 		
 		$monthyear = $row[2];
 		$premiumType = $row[3];	
@@ -140,7 +154,86 @@ sub totalPremiums{
 					my $targetp = $row[6];
 					my $delta = $row[7];	
 					my $result = $row[8];
-					print "Target Database " . $targetdb . " has "	. $result . " for " . $premiumtype . " with PRA CLASS " . $praclass . " in month / year " . $monthyear . "\n";
+					
+					
+					#find out what PRA class this row represented and set the test fail state
+					if ($praclass eq 'Public Liability') {$PublicLiability=0}
+					if ($praclass eq 'Commercial Property') {$CommercialProperty=0}
+					if ($praclass eq 'Personal Lines Property') {$PersonalLinesProperty=0}
+					if ($praclass eq 'Professional Indemnity') {$ProfessionalIndemnity=0}
+					if ($praclass eq 'Personal Accident') {$PersonalAccident=0}
+					if ($praclass eq 'Property Owners Liability') {$PropertyOwnersLiability=0}
+					if ($praclass eq 'Employers Liability') {$EmployersLiability=0}
+					if ($praclass eq 'Terrorism') {$Terrorism=0}
+					
+					#now run the tests with Test::Simple
+					if ( ok($PublicLiability == 1) ){
+						print "Test Sucess in the Public Liability Source <> Target reconciliation\n";	
+						}
+					else
+						{
+						print "Failure in the Public Liability Source <> Target reconciliation\n";
+						print "Target Database " . $targetdb . " has "	. $result . " for " . $premiumtype . " with PRA CLASS " . $praclass . " in month / year " . $monthyear . "\n";
+						}
+					
+					if ( ok($CommercialProperty == 1) ) {
+						print "Test Sucess in the Commercial Property Source <> Target reconciliation\n";	
+						}
+					else
+						{
+						print "Failure in the Commercial Property Source <> Target reconciliation\n";
+						print "Target Database " . $targetdb . " has "	. $result . " for " . $premiumtype . " with PRA CLASS " . $praclass . " in month / year " . $monthyear . "\n";
+
+						}						
+					
+					if (ok($PersonalLinesProperty == 1) ) {
+						print "Test Sucess in the Personal Lines Source <> Target reconciliation\n";
+						}
+					else{
+						print "Failure in the Personal Lines Source <> Target reconciliation\n";
+						print "Target Database " . $targetdb . " has "	. $result . " for " . $premiumtype . " with PRA CLASS " . $praclass . " in month / year " . $monthyear . "\n";						
+					}
+					
+					if ( ok($ProfessionalIndemnity == 1) ) {
+						print "Test Sucess in the Professional Indemnity Source <> Target reconciliation\n";
+						}
+					else {
+						print "Failure in the Professional Indemnity Source <> Target reconciliation\n";
+						print "Target Database " . $targetdb . " has "	. $result . " for " . $premiumtype . " with PRA CLASS " . $praclass . " in month / year " . $monthyear . "\n";						
+					}
+					
+					if ( ok($PersonalAccident == 1) ) {
+						print "Test Sucess in the Personal Accident Source <> Target reconciliation\n";
+						}
+					else {
+						print "Failure in the Personal Accident Source <> Target reconciliation\n";
+						print "Target Database " . $targetdb . " has "	. $result . " for " . $premiumtype . " with PRA CLASS " . $praclass . " in month / year " . $monthyear . "\n";						
+					}
+					
+					if (ok($PropertyOwnersLiability == 1) ) {
+						print "Test Sucess in the Property Owners Liability Source <> Target reconciliation\n";
+						}
+					else {
+						print "Failure in the Property Owners Liability Source <> Target reconciliation\n";
+						print "Target Database " . $targetdb . " has "	. $result . " for " . $premiumtype . " with PRA CLASS " . $praclass . " in month / year " . $monthyear . "\n";						
+					}
+					
+					if ( ok($EmployersLiability == 1) ) {
+						print "Test Sucess in the Employers Liability Source <> Target reconciliation\n";
+						}
+					else {
+						print "Failure in the Employers Liability Source <> Target reconciliation\n";
+						print "Target Database " . $targetdb . " has "	. $result . " for " . $premiumtype . " with PRA CLASS " . $praclass . " in month / year " . $monthyear . "\n";						
+					}
+					
+					if ( ok($Terrorism == 1) ) {
+						print "Test Sucess in the Terrorism Source Source <> Target reconciliation\n";
+						}
+					else {
+						print "Failure in the Terrorism Source <> Target reconciliation\n";
+						print "Target Database " . $targetdb . " has "	. $result . " for " . $premiumtype . " with PRA CLASS " . $praclass . " in month / year " . $monthyear . "\n";						
+						}
+
 	    			}
 	    else
 	    	{
@@ -194,7 +287,34 @@ while (@row = $getsth->fetchrow_array){
 	$putsth = $testDBHandle->prepare($insertSourceSQL);
 	$putsth->execute() || die "error inserting a source record into the quick compare target table";
 	}
+	
+	# TODO - Execute a comparison between rowcount tables.
+	
+	
 }	
+
+
+sub reconcile{
+#----------------------------------------------------------------------------------------------------------------------#
+#                  Checking the reconciliation results from the reporting and enrichment tables.					   #
+#----------------------------------------------------------------------------------------------------------------------#
+print "Fast check on self-reconciliation failures\n";
+
+
+$targetSQL = inc::tools::mod_dbtools::READSQL('c:\\udwtesting\\SQL\\fastchecks\\enrichment_reconciliation.sql') || die "Target SQL file read error\n";
+
+
+
+$getsth = $targetDBHandle->prepare($targetSQL);
+$getsth->execute();
+while (@row = $getsth->fetchrow_array){ 
+	# process the error rows and .. dunno. alert someone maybe?
+	}
+}
+
+
+
+
 
 sub disconnect{
 	$sourceDBHandle->disconnect;

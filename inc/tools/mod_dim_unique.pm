@@ -1,6 +1,7 @@
 # MOD DIM_UNIQUE
 # Rules engine got a bit too complex to run on its own so I am moving the individual rules into their own modules.
 # This rule checks that all records in a dimension supplied to it are actually unique
+#
 
 use lib 'c:\\UDWTesting';
 package inc::tools::mod_dim_unique;

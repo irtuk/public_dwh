@@ -1,4 +1,3 @@
-# Stub file for MOD_DATABASE
 # requirements...
 # MOD DB should:
 #

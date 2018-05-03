@@ -26,6 +26,6 @@ if ($sit && not $uat ) {print "Running on SIT"}
 
 if ($uat && not $sit ) {print "Running on UAT"}
 
-if ($uat && $sit) {print "please select only one target!"}
+if ($uat && $sit) {print "please select only one target you twat!"}
 
 

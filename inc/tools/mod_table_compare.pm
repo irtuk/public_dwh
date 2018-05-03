@@ -1,11 +1,6 @@
 # MOD_TABLECOMPARE
 # Rules engine got a bit too complex to run on its own so I am moving the individual rules into their own modules.
 
-# Table compare will directly compare two tables with a full outer join ( essentially a left outer and a right outer with a UNION because mySQL does not support FULL OUTER )
-# column by column and return any rows that dont have  matching row on the other side. It does this using a composite key consisting of ALL columns
-# so we DONT pass integer key values in. Find a set of natural keys for your source to target mapping and use those. Columns in same order please, for now.
-
-
 use lib 'c:\\UDWTesting';
 package inc::tools::mod_table_compare;
 
@@ -97,8 +92,6 @@ my @array = @{ $arrayref };
 #set some vars
 my $index = 0;
 my $arraysize =  scalar @array;
-
-# now for the sexy bit..
 
 my $ruleSQL = "select * from ". $leftTable . " L left outer join " . $rightTable . " R on 1 = 1 ";
 
